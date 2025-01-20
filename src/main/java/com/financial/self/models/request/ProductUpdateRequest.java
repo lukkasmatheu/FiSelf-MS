@@ -1,8 +1,8 @@
-package com.financial.self.dto;
+package com.financial.self.models.request;
 
 import java.time.LocalDate;
 
-import com.financial.self.entity.TaskStatus;
+import com.financial.self.models.entity.Status;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -17,8 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-@Schema(title = "TaskUpdationRequest", accessMode = Schema.AccessMode.WRITE_ONLY)
-public class TaskUpdationRequestDto {
+@Schema(title = "ProductUpdateRequest", accessMode = Schema.AccessMode.WRITE_ONLY)
+public class ProductUpdateRequest {
 
 	@NotBlank(message = "Description must not be empty")
 	@Schema(requiredMode = RequiredMode.REQUIRED, description = "description of task", example = "Resolve user authentication issue detailed in Jira#9051")
@@ -26,7 +26,7 @@ public class TaskUpdationRequestDto {
 
 	@NotNull(message = "Status must not be empty")
 	@Schema(requiredMode = RequiredMode.REQUIRED, description = "status of the task", example = "COMPLETED")
-	private TaskStatus status;
+	private Status status;
 
 	@FutureOrPresent(message = "DueDate must be a future date")
 	@NotNull(message = "DueDate must not be empty")

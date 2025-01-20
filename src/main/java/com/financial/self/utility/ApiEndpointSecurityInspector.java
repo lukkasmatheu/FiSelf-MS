@@ -23,14 +23,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-/**
- * Utility class responsible for evaluating the accessibility of API endpoints
- * based on their security configuration. It works in conjunction with the
- * mappings of controller methods annotated with {@link PublicEndpoint}.
- * 
- * @see PublicEndpoint
- * @see OpenApiConfigurationProperties
- */
+
 @Component
 @RequiredArgsConstructor
 @EnableConfigurationProperties(OpenApiConfigurationProperties.class)
@@ -41,16 +34,11 @@ public class ApiEndpointSecurityInspector {
 	private static final List<String> SWAGGER_V3_PATHS = List.of("/swagger-ui**/**", "/v3/api-docs**/**");
 	
 	@Getter
-	private List<String> publicGetEndpoints = new ArrayList<String>();
+	private List<String> publicGetEndpoints = new ArrayList<>();
 	@Getter
-	private List<String> publicPostEndpoints = new ArrayList<String>();
+	private List<String> publicPostEndpoints = new ArrayList<>();
 
-	/**
-	 * Initializes the class by gathering public endpoints for various HTTP methods.
-	 * It identifies designated public endpoints within the application's mappings
-	 * and adds them to separate lists based on their associated HTTP methods.
-	 * If OpenAPI is enabled, Swagger endpoints are also considered as public.
-	 */
+
 	@PostConstruct
 	public void init() {
 		final var handlerMethods = requestHandlerMapping.getHandlerMethods();
@@ -73,12 +61,6 @@ public class ApiEndpointSecurityInspector {
 		}
 	}
 
-	/**
-	 * Checks if the provided HTTP request is directed towards an unsecured API endpoint.
-	 *
-	 * @param request The HTTP request to inspect.
-	 * @return {@code true} if the request is to an unsecured API endpoint, {@code false} otherwise.
-	 */
 	public boolean isUnsecureRequest(@NonNull final HttpServletRequest request) {
 		final var requestHttpMethod = HttpMethod.valueOf(request.getMethod());
 		var unsecuredApiPaths = getUnsecuredApiPaths(requestHttpMethod);
@@ -87,12 +69,6 @@ public class ApiEndpointSecurityInspector {
 		return unsecuredApiPaths.stream().anyMatch(apiPath -> new AntPathMatcher().match(apiPath, request.getRequestURI()));
 	}
 
-	/**
-	 * Retrieves the list of unsecured API paths based on the provided HTTP method.
-	 * 
-	 * @param httpMethod The HTTP method for which unsecured paths are to be retrieved.
-	 * @return A list of unsecured API paths for the specified HTTP method.s
-	 */
 	private List<String> getUnsecuredApiPaths(@NonNull final HttpMethod httpMethod) {
 		switch (httpMethod) {
 			case GET:

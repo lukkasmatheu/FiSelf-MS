@@ -25,15 +25,15 @@
 
 	<developers>
 		<developer>
-			<id>hardikSinghBehl</id>
-			<name>Hardik Singh Behl</name>
-			<email>hardik.behl7444@gmail.com</email>
-			<url>https://www.linkedin.com/in/hardiksinghbehl</url>
+			<id>LucasMatheusSantos</id>
+			<name>Lucas Matheus dos Santos</name>
+			<email>lukkasmatheu@gmail.com</email>
+			<url>https://www.linkedin.com/in/lukkasmatheu</url>
 			<roles>
 				<role>Backend Developer</role>
 				<role>Java Web Developer</role>
 			</roles>
-			<timezone>UTC +5:30</timezone>
+			<timezone>UTC +3:00</timezone>
 		</developer>
 	</developers>
 

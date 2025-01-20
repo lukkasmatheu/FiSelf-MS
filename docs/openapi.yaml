@@ -10,13 +10,13 @@ servers:
 tags:
 - name: User Management
   description: Endpoints for user account and authentication management
-- name: Task Management
+- name: Product Management
   description: Endpoints for managing tasks.
 paths:
   /api/v1/tasks/{taskId}:
     get:
       tags:
-      - Task Management
+      - Product Management
       summary: Retrieves task details
       description: Retrieve details of a specific task by its ID
       operationId: retrieve_1
@@ -46,14 +46,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExceptionResponseDto'
         "200":
-          description: Task details retrieved successfully
+          description: Product details retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TaskResponseDto'
     put:
       tags:
-      - Task Management
+      - Product Management
       summary: Updates task details
       description: Update details of a specified task by its ID
       operationId: update
@@ -67,11 +67,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskUpdationRequestDto'
+              $ref: '#/components/schemas/ProductUpdateRequest'
         required: true
       responses:
         "200":
-          description: Task details updated successfully
+          description: Product details updated successfully
         "403":
           description: "Access denied: Insufficient permissions"
           content:
@@ -92,7 +92,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionResponseDto'
     delete:
       tags:
-      - Task Management
+      - Product Management
       summary: Deletes a task record
       description: Delete a specific task by its ID
       operationId: delete
@@ -104,7 +104,7 @@ paths:
           type: string
       responses:
         "200":
-          description: Task deleted successfully
+          description: Product deleted successfully
         "403":
           description: "Access denied: Insufficient permissions"
           content:
@@ -188,7 +188,7 @@ paths:
   /api/v1/tasks:
     get:
       tags:
-      - Task Management
+      - Product Management
       summary: Retrieves all tasks of authenticated user
       description: Retrieve details of all tasks corresponding to authenticated user
       operationId: retrieve
@@ -200,7 +200,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExceptionResponseDto'
         "200":
-          description: Task details retrieved successfully
+          description: Product details retrieved successfully
           content:
             application/json:
               schema:
@@ -209,7 +209,7 @@ paths:
                   $ref: '#/components/schemas/TaskResponseDto'
     post:
       tags:
-      - Task Management
+      - Product Management
       summary: Creates a new task record
       description: Creates a new task with provided details
       operationId: create
@@ -233,7 +233,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExceptionResponseDto'
         "200":
-          description: Task created successfully
+          description: Product created successfully
 components:
   schemas:
     TaskUpdationRequestDto:

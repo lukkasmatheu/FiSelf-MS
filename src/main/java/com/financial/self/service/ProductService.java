@@ -1,24 +1,21 @@
 package com.financial.self.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.behl.flare.dto.TaskCreationRequestDto;
-import com.financial.self.dto.TaskResponseDto;
-import com.financial.self.dto.TaskUpdationRequestDto;
-import com.financial.self.entity.Task;
-import com.financial.self.entity.TaskStatus;
 import com.financial.self.exception.InvalidTaskIdException;
 import com.financial.self.exception.TaskOwnershipViolationException;
+import com.financial.self.models.entity.Product;
+import com.financial.self.models.request.ProductCreateRequest;
+import com.financial.self.models.response.ProductResponse;
 import com.financial.self.utility.AuthenticatedUserIdProvider;
 import com.financial.self.utility.DateUtility;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,139 +25,109 @@ public class ProductService {
 	private final DateUtility dateUtility;
 	private final AuthenticatedUserIdProvider authenticatedUserIdProvider;
 
-	/**
-	 * Retrieves task details corresponding to provided taskId.
-	 * 
-	 * @param taskId the ID of the task to retrieve
-	 * @return a TaskResponseDto containing details of the retrieved task
-	 * @throws IllegalArgumentException if provided argument is {@code null}
-	 * @throws InvalidTaskIdException if no task exists corresponding to given taskId
-	 * @throws TaskOwnershipViolationException if retrieved task is not created by current authenticated user
-	 */
-	public TaskResponseDto retrieve(@NonNull final String taskId) {
-		final var retrievedDocument = get(taskId);
-		final var task = retrievedDocument.toObject(Task.class);
-		verifyTaskOwnership(task);
-		
-		return creatResponse(retrievedDocument, task);
+
+	public ProductResponse getById(String productId) {
+		final var retrievedDocument = get(productId);
+		final var product = retrievedDocument.toObject(Product.class);
+		verifyProductOwnership(product);
+		return createResponse(retrievedDocument, product);
 	}
-	
-	/**
-	 * Retrieves all tasks owned by the current authenticated user.
-	 * Returns an empty list if no task record exists for the user.
-	 *
-	 * @return a list of TaskResponseDto representing the user's tasks
-	 */
+
 	@SneakyThrows
-	public List<TaskResponseDto> retrieve() {
+	public List<ProductResponse> getAll() {
 		final var userId = authenticatedUserIdProvider.getUserId();
-		return firestore.collection(Task.name()).whereEqualTo("createdBy", userId)
+		return firestore.collection(Product.name()).whereEqualTo("createdBy", userId)
 				.get().get().getDocuments()
 				.stream()
 				.map(document -> {
-					final var task = document.toObject(Task.class);
-					return creatResponse(document, task);
+					final var product = document.toObject(Product.class);
+					return createResponse(document, product);
 				}).toList();
 	}
 	
-	/**
-	 * Creates a new task record for the current authenticated user
-	 * corresponding to the provided creation request. 
-	 * 
-	 * @param taskCreationRequest containing task details
-	 * @throws IllegalArgumentException if provided argument is {@code null}
-	 */
-	public void create(@NonNull final TaskCreationRequestDto taskCreationRequest) {
-		final var task = new Task();
-		task.setStatus(TaskStatus.NEW);
-		task.setTitle(taskCreationRequest.getTitle());
-		task.setDescription(taskCreationRequest.getDescription());
-		task.setDueDate(dateUtility.convert(taskCreationRequest.getDueDate()));
-		task.setCreatedBy(authenticatedUserIdProvider.getUserId());
 
-		firestore.collection(Task.name()).document().set(task);
+	public void create(@NonNull final ProductCreateRequest productCreateRequest) {
+		var productEntity = Product.fromRequest(productCreateRequest);
+		productEntity.setCreateByOwner(authenticatedUserIdProvider.getUserId());
+		firestore.collection(Product.name()).document().set(productEntity);
 	}
 	
-	/**
-	 * Updates an existing task record corresponding to provided taskId with 
-	 * given request details.
-	 *
-	 * @param taskId the ID of the task to update
-	 * @param taskUpdationRequest the request containing updated task details
-	 * @throws IllegalArgumentException if provided argument is {@code null}
-	 * @throws InvalidTaskIdException if no task exists corresponding to given taskId
-	 * @throws TaskOwnershipViolationException if retrieved task is not created by current authenticated user
-	 */
-	public void update(@NonNull final String taskId, @NonNull final TaskUpdationRequestDto taskUpdationRequest) {
+
+	public void update(@NonNull final String taskId, @NonNull final ProductCreateRequest productCreateRequest) {
 		final var retrievedDocument = get(taskId);
-		final var task = retrievedDocument.toObject(Task.class);
-		verifyTaskOwnership(task);
-		
-		task.setDescription(taskUpdationRequest.getDescription());
-		task.setStatus(taskUpdationRequest.getStatus());
-		task.setDueDate(dateUtility.convert(taskUpdationRequest.getDueDate()));
-		
-		firestore.collection(Task.name()).document(retrievedDocument.getId()).set(task);
-	}
-	
-	/**
-	 * Deletes task record corresponding to provided taskId
-	 *
-	 * @param taskId the ID of the task to delete
-	 * @throws IllegalArgumentException if provided argument is {@code null}
-	 * @throws InvalidTaskIdException if no task exists corresponding to given taskId
-	 * @throws TaskOwnershipViolationException if retrieved task is not created by current authenticated user
-	 */
-	public void delete(@NonNull final String taskId) {
-		final var document = get(taskId);
-		final var task = document.toObject(Task.class);
-		verifyTaskOwnership(task);
-		
-		firestore.collection(Task.name()).document(document.getId()).delete();
+		var product = retrievedDocument.toObject(Product.class);
+		verifyProductOwnership(product);
+		product = updateValues(product,productCreateRequest);
+		firestore.collection(Product.name()).document(retrievedDocument.getId()).set(product);
 	}
 
-	/**
-	 * Verifies if the given task belongs to the current authenticated user.
-	 *
-	 * @param task the record to be verified for ownership.
-	 * @throws IllegalArgumentException if provided argument is {@code null}
-	 * @throws TaskOwnershipViolationException on validation failure
-	 */
-	private void verifyTaskOwnership(@NonNull final Task task) {
+
+
+	public void delete(@NonNull final String productIdf) {
+		final var document = get(productIdf);
+		final var product = document.toObject(Product.class);
+		verifyProductOwnership(product);
+		
+		firestore.collection(Product.name()).document(document.getId()).delete();
+	}
+
+
+	private void verifyProductOwnership(@NonNull final Product product) {
 		final var userId = authenticatedUserIdProvider.getUserId();
-		final var taskBelongsToUser = task.getCreatedBy().equals(userId);
+		final var taskBelongsToUser = product.getCreateByOwner().equals(userId);
 		if (Boolean.FALSE.equals(taskBelongsToUser)) {
 			throw new TaskOwnershipViolationException();
 		}
 	}
 	
-	/**
-	 * Retrieves a task document from Firestore database corresponding to
-	 * its document ID.
-	 *
-	 * @param taskId the ID of the task document to retrieve
-	 * @return the DocumentSnapshot representing the retrieved task document
-	 * @throws InvalidTaskIdException if no task exists corresponding to given taskId
-	 */
+
 	@SneakyThrows
-	private DocumentSnapshot get(@NonNull final String taskId) {
-		final var retrievedDocument = firestore.collection(Task.name()).document(taskId).get().get();
+	private DocumentSnapshot get(@NonNull final String productId) {
+		final var retrievedDocument = firestore.collection(Product.name()).document(productId).get().get();
 		final var documentExists = retrievedDocument.exists();
 		if (Boolean.FALSE.equals(documentExists)) {
-			throw new InvalidTaskIdException("No task exists in the system with provided-id");
+			throw new InvalidTaskIdException("No product register exists in the system with provided-id");
 		}
 		return retrievedDocument;
 	}
 
-	private TaskResponseDto creatResponse(final DocumentSnapshot document, final Task task) {
-		return TaskResponseDto.builder()
+	private ProductResponse createResponse(final DocumentSnapshot document, final Product product) {
+		return ProductResponse.builder()
 				.id(document.getId())
-				.title(task.getTitle())
-				.status(task.getStatus())
-				.description(task.getDescription())
-				.createdAt(dateUtility.convert(document.getCreateTime()))
-				.updatedAt(dateUtility.convert(document.getUpdateTime()))
+				.productName(product.getProductName())
+				.description(product.getDescription())
+				.quantity(product.getQuantity())
+				.category(product.getCategory())
+				.cost(product.getCost())
+				.image(product.getImage())
+				.salePrice(product.getSalePrice())
+				.expirationDate(product.getExpirationDate())
+				.status(product.getStatus())
+				.createdAt(dateUtility.convert(Objects.requireNonNull(document.getCreateTime())))
+				.updatedAt(dateUtility.convert(Objects.requireNonNull(document.getUpdateTime())))
 				.build();
+	}
+
+	private Product updateValues(Product product, @NonNull ProductCreateRequest productCreateRequest) {
+		return Product.builder()
+				.productId(getUpdatedValue(productCreateRequest.getIdProduct(), product.getProductId()))
+				.companyId(getUpdatedValue(productCreateRequest.getIdCompany(), product.getCompanyId()))
+				.creationDate(getUpdatedValue(productCreateRequest.getCreationDate(), product.getCreationDate()))
+				.category(getUpdatedValue(productCreateRequest.getCategory(), product.getCategory()))
+				.productName(getUpdatedValue(productCreateRequest.getProductName(), product.getProductName()))
+				.description(getUpdatedValue(productCreateRequest.getDescription(), product.getDescription()))
+				.cost(getUpdatedValue(productCreateRequest.getCost(), product.getCost()))
+				.image(getUpdatedValue(productCreateRequest.getImage(), product.getImage()))
+				.salePrice(getUpdatedValue(productCreateRequest.getSalePrice(), product.getSalePrice()))
+				.expirationDate(getUpdatedValue(productCreateRequest.getExpirationDate(), product.getExpirationDate()))
+				.status(getUpdatedValue(productCreateRequest.getStatus(), product.getStatus()))
+				.quantity(getUpdatedValue(productCreateRequest.getQuantity(), product.getQuantity()))
+				.supplier(getUpdatedValue(productCreateRequest.getSupplier(), product.getSupplier()))
+				.build();
+	}
+
+	private <T> T getUpdatedValue(T newValue, T currentValue) {
+		return newValue != null ? newValue : currentValue;
 	}
 
 }

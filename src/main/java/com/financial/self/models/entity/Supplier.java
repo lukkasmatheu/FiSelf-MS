@@ -1,4 +1,4 @@
-package com.financial.self.dto;
+package com.financial.self.models.entity;
 
 
 import jakarta.validation.constraints.NotBlank;
@@ -7,12 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FornecedorDto {
+public class Supplier {
     @NotBlank(message = "ID do fornecedor deve ser fornecido")
-    private String idFornecedor;
+    private String idSupplier;
 
     @NotBlank(message = "Nome do fornecedor deve ser fornecido")
-    private String nome;
+    private String name;
 
     @NotBlank(message = "CNPJ deve ser fornecido")
     private String cnpj;

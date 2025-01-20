@@ -30,11 +30,11 @@ public class UserCreationRequest {
     private String password;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Unique identifier for the user", example = "U12345")
-    private String idUsuario;
+    private String idUser;
 
     @NotBlank(message = "Name must not be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Full name of the user", example = "Hardik Behl")
-    private String nome;
+    private String name;
 
     @NotBlank(message = "CPF must not be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Brazilian CPF (Cadastro de Pessoas Físicas)", example = "123.456.789-09")
@@ -42,18 +42,18 @@ public class UserCreationRequest {
 
     @NotNull(message = "Date of birth must not be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Date of birth of the user", example = "1990-01-01")
-    private LocalDate dataNascimento;
+    private LocalDate birthDate;
 
     @NotBlank(message = "Phone number must not be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "User's phone number", example = "(11) 91234-5678")
-    private String telefone;
+    private String phone;
 
     @NotNull(message = "Creation date must not be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Date and time when the user was created", example = "2023-01-01T10:15:30")
-    private LocalDateTime dataCriacao;
+    private LocalDateTime creationDate;
 
     @Schema(description = "Date and time of the last update to the user's information", example = "2023-01-10T12:45:00")
-    private LocalDateTime dataUltimaAtualizacao;
+    private LocalDateTime updateDate;
 
     @NotBlank(message = "Status must not be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Current status of the user", example = "Active")
