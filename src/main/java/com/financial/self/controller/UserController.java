@@ -1,6 +1,7 @@
 package com.financial.self.controller;
 
 import com.financial.self.models.request.UserCreationRequest;
+import com.financial.self.models.response.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.financial.self.configuration.PublicEndpoint;
 import com.financial.self.dto.ExceptionResponseDto;
-import com.financial.self.dto.TokenSuccessResponseDto;
+import com.financial.self.models.response.TokenSuccessResponse;
 
-import com.financial.self.dto.UserLoginRequestDto;
+import com.financial.self.models.request.UserLoginRequest;
 import com.financial.self.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +25,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,8 +60,8 @@ public class UserController {
 					content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid request body",
 					content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class))) })
-	public ResponseEntity<TokenSuccessResponseDto> login(
-			@Valid @RequestBody final UserLoginRequestDto userLoginRequest) {
+	public ResponseEntity<UserResponse> login(
+			@Valid @RequestBody final UserLoginRequest userLoginRequest) throws ExecutionException, InterruptedException {
 		final var response = userService.login(userLoginRequest);
 		return ResponseEntity.ok(response);
 	}

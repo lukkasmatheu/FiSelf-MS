@@ -1,4 +1,4 @@
-package com.financial.self.dto;
+package com.financial.self.models.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,14 +12,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonNaming(value = PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 @Schema(title = "UserLoginRequest", accessMode = Schema.AccessMode.WRITE_ONLY)
-public class UserLoginRequestDto {
+public class UserLoginRequest {
 
 	@NotBlank(message = "EmailId must not be empty")
 	@Email(message = "EmailId must be of valid format")
 	@Schema(requiredMode = RequiredMode.REQUIRED, example = "hardik.behl7444@gmail.com", description = "email-id associated with user account already created in the system")
-	private String emailId;
+	private String email;
 
 	@NotBlank(message = "Password must not be empty")
 	@Schema(requiredMode = RequiredMode.REQUIRED, example = "somethingSecure", description = "password corresponding to provided email-id")

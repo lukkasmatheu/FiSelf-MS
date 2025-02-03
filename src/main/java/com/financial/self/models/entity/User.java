@@ -1,14 +1,12 @@
 package com.financial.self.models.entity;
 
 import com.financial.self.models.request.UserCreationRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -18,6 +16,8 @@ import java.time.LocalDateTime;
 public class User {
 
     private static final String ENTITY_NAME = "user";
+    public static final ZoneId ZONE_BRASIL = ZoneId.of("America/Sao_Paulo");
+
 
     public static String name() {
         return ENTITY_NAME;
@@ -31,13 +31,13 @@ public class User {
 
     private String cpf;
 
-    private LocalDate birthDate;
+    private Date birthDate;
 
     private String phone;
 
-    private LocalDateTime creationDate;
+    private Date creationDate;
 
-    private LocalDateTime updateDate;
+    private Date updateDate;
 
     private String status;
 
@@ -47,11 +47,11 @@ public class User {
                 .email(request.getEmail())
                 .name(request.getName())
                 .cpf(request.getCpf())
-                .birthDate(request.getBirthDate())
+                .birthDate(Date.from(request.getBirthDate().atStartOfDay(ZONE_BRASIL).toInstant()))
                 .phone(request.getPhone())
-                .creationDate(request.getCreationDate())
-                .updateDate(request.getUpdateDate())
-                .status(request.getStatus())
+                .creationDate(Date.from(request.getCreationDate().atZone(ZONE_BRASIL).toInstant()))
+                .updateDate(Date.from(request.getUpdateDate().atZone(ZONE_BRASIL).toInstant()))
+                .status(request.getStatus().name())
                 .build();
     }
 }

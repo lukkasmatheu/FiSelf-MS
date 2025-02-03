@@ -2,6 +2,7 @@ package com.financial.self.models.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.financial.self.models.entity.UserStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,10 +13,11 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
-@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonNaming(value = PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 @Schema(title = "UserCreationRequest", accessMode = Schema.AccessMode.WRITE_ONLY)
 public class UserCreationRequest {
 
@@ -31,6 +33,7 @@ public class UserCreationRequest {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Unique identifier for the user", example = "U12345")
     private String idUser;
+
 
     @NotBlank(message = "Name must not be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Full name of the user", example = "Hardik Behl")
@@ -48,14 +51,12 @@ public class UserCreationRequest {
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "User's phone number", example = "(11) 91234-5678")
     private String phone;
 
-    @NotNull(message = "Creation date must not be empty")
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Date and time when the user was created", example = "2023-01-01T10:15:30")
-    private LocalDateTime creationDate;
+    @Schema(description = "Date and time when the user was created", example = "2023-01-01T10:15:30")
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     @Schema(description = "Date and time of the last update to the user's information", example = "2023-01-10T12:45:00")
-    private LocalDateTime updateDate;
+    private LocalDateTime updateDate = LocalDateTime.now();
 
-    @NotBlank(message = "Status must not be empty")
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Current status of the user", example = "Active")
-    private String status;
+    @Schema(description = "Current status of the user", example = "ACTIVE")
+    private UserStatus status = UserStatus.ACTIVE;
 }
