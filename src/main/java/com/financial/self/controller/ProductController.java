@@ -1,10 +1,8 @@
 package com.financial.self.controller;
 
 import com.financial.self.dto.ExceptionResponseDto;
-import com.financial.self.models.entity.Product;
-import com.financial.self.models.request.ProductUpdateRequest;
-import com.financial.self.dto.TaskResponseDto;
 import com.financial.self.models.request.ProductCreateRequest;
+import com.financial.self.models.request.SaleProductRequest;
 import com.financial.self.models.response.ProductResponse;
 import com.financial.self.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -34,7 +33,6 @@ import java.util.List;
 @RequestMapping("/v1/products")
 @Tag(name = "Product Management", description = "Endpoints for managing Product.")
 public class ProductController {
-
 	private final ProductService productService;
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -48,6 +46,22 @@ public class ProductController {
 					content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class))) })
 	public ResponseEntity<HttpStatus> create(@Valid @RequestBody ProductCreateRequest productCreateRequest) {
 		productService.create(productCreateRequest);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping(value = "/sale", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Register Sale Products", description = "Register sale Products")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product sale successfully",
+					content = @Content(schema = @Schema(implementation = Void.class))),
+			@ApiResponse(responseCode = "404", description = "No product exists in the system with provided-id",
+					content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class))),
+			@ApiResponse(responseCode = "401", description = "Authentication failure: Invalid access token",
+					content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class))),
+			@ApiResponse(responseCode = "403", description = "Access denied: Insufficient permissions",
+					content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class))) })
+	public ResponseEntity<HttpStatus> saleProduct(@Valid @RequestBody List<SaleProductRequest> saleProductListRequest) {
+		saleProductListRequest.forEach(productService::saleProduct);
 		return ResponseEntity.ok().build();
 	}
 

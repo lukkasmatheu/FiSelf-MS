@@ -6,10 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+
+import static com.financial.self.models.entity.User.ZONE_BRASIL;
 
 @Getter
 @Setter
@@ -24,14 +28,13 @@ public class Product {
 		return ENTITY_NAME;
 	}
 
-
 	private String productId;
 
 	private String companyId;
 
-	private LocalDate creationDate;
+	private Date creationDate;
 
-	private List<String> category;
+	private String category;
 
 	private String productName;
 
@@ -39,17 +42,15 @@ public class Product {
 
 	private BigDecimal cost;
 
-	private byte[] image;
+	private String image;
 
 	private BigDecimal salePrice;
 
-	private LocalDate expirationDate;
-
-	private Status status;
+	private Date expirationDate;
 
 	private Integer quantity;
 
-	private Supplier supplier;
+//	private Supplier supplier;
 
 	private String createByOwner;
 
@@ -57,17 +58,15 @@ public class Product {
 		return Product.builder()
 				.productId(request.getIdProduct())
 				.companyId(request.getIdCompany())
-				.creationDate(request.getCreationDate())
+				.creationDate(Date.from(request.getCreationDate().atStartOfDay(ZONE_BRASIL).toInstant()))
 				.category(request.getCategory())
 				.productName(request.getProductName())
-				.description(request.getDescription())
+				.description(StringUtils.defaultIfEmpty(request.getDescription(),"Descrição padrão do produto"))
 				.cost(request.getCost())
-				.image(request.getImage())
+				.image(StringUtils.defaultString(request.getImage()))
 				.salePrice(request.getSalePrice())
-				.expirationDate(request.getExpirationDate())
-				.status(request.getStatus())
+				.expirationDate(request.getExpirationDate() != null ? Date.from(request.getExpirationDate().atStartOfDay(ZONE_BRASIL).toInstant()): null)
 				.quantity(request.getQuantity())
-				.supplier(request.getSupplier())
 				.build();
 	}
 

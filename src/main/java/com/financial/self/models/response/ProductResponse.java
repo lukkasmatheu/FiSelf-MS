@@ -16,20 +16,18 @@ import java.util.List;
 @Getter
 @Builder
 @Jacksonized
-@Schema(title = "TaskResponse", accessMode = Schema.AccessMode.READ_ONLY)
-@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@Schema(title = "ProductResponse", accessMode = Schema.AccessMode.READ_ONLY)
+@JsonNaming(value = PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class ProductResponse {
-
 	private String id;
 	private String productName;
 	private Integer quantity;
-	private List<String> category;
+	private String category;
 	private BigDecimal cost;
-	private byte[] image;
+	private String image;
 	private String description;
 	private BigDecimal salePrice;
 	private LocalDate expirationDate;
-	private Status status;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 }

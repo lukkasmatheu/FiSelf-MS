@@ -1,4 +1,4 @@
-package com.financial.self.dto;
+package com.financial.self.models.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -11,10 +11,12 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Builder
 @Jacksonized
-@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonNaming(value = PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 @Schema(title = "TokenSuccessResponse", accessMode = Schema.AccessMode.READ_ONLY)
-public class TokenSuccessResponseDto {
+public class TokenSuccessResponse {
 
 	private String accessToken;
+	private String refreshToken;
+	private String expiresIn;
 
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "com.behl.flare")
+@ConfigurationProperties(prefix = "com.financial.self")
 public class OpenApiConfigurationProperties {
 
 	private OpenAPI openApi = new OpenAPI();
