@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn package
 
 # Etapa 2: Criar a imagem final para execução
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre
 
 # Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
