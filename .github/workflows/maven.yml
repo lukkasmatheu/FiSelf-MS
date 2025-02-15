@@ -30,3 +30,13 @@ jobs:
       run: docker build -t lukkasmatheu/filself-ms .
     - name: Push Image Docker
       run: docker push lukkasmatheu/filself-ms
+  
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+        - name: Pull Image from docker hub
+          run: docker pull lukkasmatheu/filself-ms:latest
+        - name: run docker container
+          run: docker run -d -p 8080:8080 -e FIREBASE_PRIVATE_KEY='${{FIREBASE_PRIVATE_KEY}}' -e FIREBASE_WEB_API_KEY='${{FIREBASE_WEB_API_KEY}}' --name deploy_fiself lukkasmatheu/filself-ms
+    
