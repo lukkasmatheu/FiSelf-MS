@@ -40,5 +40,5 @@ jobs:
         - name: Docker Remove Container
           run: docker rm -f deploy_fiself
         - name: run docker container
-          run: docker run -d -p 8080:8080 -e FIREBASE_PRIVATE_KEY='${{secrets.FIREBASE_PRIVATE_KEY}}' -e FIREBASE_WEB_API_KEY='${{secrets.FIREBASE_WEB_API_KEY}}' --name deploy_fiself lukkasmatheu/fiself-ms
+          run: docker run --rm -d -p 8080:8080 -e FIREBASE_PRIVATE_KEY='${{secrets.FIREBASE_PRIVATE_KEY}}' -e FIREBASE_WEB_API_KEY='${{secrets.FIREBASE_WEB_API_KEY}}' --name deploy_fiself lukkasmatheu/fiself-ms || echo "Erro ao criar o container"
     
