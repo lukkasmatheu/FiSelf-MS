@@ -38,7 +38,7 @@ jobs:
         - name: Pull Image from docker hub
           run: docker pull lukkasmatheu/fiself-ms:latest
         - name: Docker Remove Container
-          run: docker rm -f deploy_fiself
+          run: docker rm -f deploy_fiself || true 
         - name: run docker container
           run: docker run --rm -d -p 8080:8080 -e FIREBASE_PRIVATE_KEY='${{secrets.FIREBASE_PRIVATE_KEY}}' -e FIREBASE_WEB_API_KEY='${{secrets.FIREBASE_WEB_API_KEY}}' --name deploy_fiself lukkasmatheu/fiself-ms || echo "Erro ao criar o container"
     
