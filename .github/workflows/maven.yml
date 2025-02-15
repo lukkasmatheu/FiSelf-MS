@@ -27,7 +27,7 @@ jobs:
         username: ${{secrets.DOCKER_USERNAME}} 
         password: ${{secrets.DOCKER_PASSWORD}}
     - name: Build Docker Image
-      run: docker build -t lukkasmatheu/fiself-ms
+      run: docker build -t lukkasmatheu/fiself-ms .
     - name: Push Image Docker
       run: docker push lukkasmatheu/fiself-ms
   
