@@ -27,18 +27,18 @@ jobs:
         username: ${{secrets.DOCKER_USERNAME}} 
         password: ${{secrets.DOCKER_PASSWORD}}
     - name: Build Docker Image
-      run: docker build -t lukkasmatheu/filself-ms .
+      run: docker build -t lukkasmatheu/fiself-ms
     - name: Push Image Docker
-      run: docker push lukkasmatheu/filself-ms
+      run: docker push lukkasmatheu/fiself-ms
   
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
         - name: Pull Image from docker hub
-          run: docker pull lukkasmatheu/filself-ms:latest
+          run: docker pull lukkasmatheu/fiself-ms:latest
         - name: Docker Remove Container
           run: docker rm -f deploy_fiself
         - name: run docker container
-          run: docker run -d -p 8080:8080 -e FIREBASE_PRIVATE_KEY='${{secrets.FIREBASE_PRIVATE_KEY}}' -e FIREBASE_WEB_API_KEY='${{secrets.FIREBASE_WEB_API_KEY}}' --name deploy_fiself lukkasmatheu/filself-ms
+          run: docker run -d -p 8080:8080 -e FIREBASE_PRIVATE_KEY='${{secrets.FIREBASE_PRIVATE_KEY}}' -e FIREBASE_WEB_API_KEY='${{secrets.FIREBASE_WEB_API_KEY}}' --name deploy_fiself lukkasmatheu/fiself-ms
     
