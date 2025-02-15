@@ -12,9 +12,9 @@
 	</parent>
 
 	<groupId>com.behl</groupId>
-	<artifactId>firebase-integration-spring-boot</artifactId>
+	<artifactId>deploy_fiself</artifactId>
 	<version>1.0.0</version>
-	<name>firebase-integration-spring-boot</name>
+	<name>deploy_fiself</name>
 	<description>backend application integrating with firebase authentication and storage service to build a secure crud application</description>
 
 	<properties>
