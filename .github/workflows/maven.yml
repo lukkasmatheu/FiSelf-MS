@@ -37,6 +37,8 @@ jobs:
     steps:
         - name: Pull Image from docker hub
           run: docker pull lukkasmatheu/filself-ms:latest
+        - name: Docker Remove Container
+          run: docker rm -f deploy_fiself
         - name: run docker container
           run: docker run -d -p 8080:8080 -e FIREBASE_PRIVATE_KEY='${{secrets.FIREBASE_PRIVATE_KEY}}' -e FIREBASE_WEB_API_KEY='${{secrets.FIREBASE_WEB_API_KEY}}' --name deploy_fiself lukkasmatheu/filself-ms
     
