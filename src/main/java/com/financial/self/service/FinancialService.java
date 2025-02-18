@@ -53,7 +53,7 @@ public class FinancialService {
         final var retrievedDocument = firestore.collection(FinancialRecord.name()).document(companyId).get().get();
         final var documentExists = retrievedDocument.exists();
         if (Boolean.FALSE.equals(documentExists)) {
-            throw new InvalidTaskIdException("No Financial register exists in the system with provided-id");
+            throw new InvalidTaskIdException("No Financial register exists in the system with provided-id ");
         }
         return retrievedDocument;
     }
