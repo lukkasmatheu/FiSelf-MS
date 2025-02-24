@@ -15,4 +15,4 @@ Funções implementadas
 ACTION
 
 - Action de deploy automatico no docker aws ec2
-- Build
+- Build 
